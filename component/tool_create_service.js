@@ -3,13 +3,20 @@ import serviceList from '../datasets/emon_service_list_v1.json' with { type: 'js
 import 'dotenv/config';
 
 export async function createServiceEnquiryTool(service_code, formData, token) {
+
+    const baseUrl = process.env.ACTION_SERVICE_CREATE_URL;
+    if (!baseUrl) {
+        console.error('ACTION_SERVICE_CREATE_URL is not set in environment variables.');
+        process.exit(1);
+    }
+
     try {
         if (serviceList.some(x => x.code === service_code)) {
             let body = {};
             if (!(formData === null || formData === undefined))
                 body = formData
 
-            const response = await axios.post(process.env.ACTION_SERVICE_CREATE_URL + "/" + service_code, body, {
+            const response = await axios.post(baseUrl + "/" + service_code, body, {
                 headers: {
                     //'Content-Type': 'application/json',
                     'token': token

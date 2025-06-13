@@ -2,6 +2,13 @@ import axios from "axios";
 import 'dotenv/config';
 
 export async function sendEnquiryDataTool(enquiry_number, email) {
+
+    const baseUrl = process.env.ACTION_SEND_EMAIL_URL;
+    if (!baseUrl) {
+        console.error('ACTION_SEND_EMAIL_URL is not set in environment variables.');
+        process.exit(1);
+    }
+
     try {
         const requestBody = {
             "fromName": "И-Монгол чат бот",
@@ -13,7 +20,7 @@ export async function sendEnquiryDataTool(enquiry_number, email) {
             "enquiryNumber": enquiry_number,
             "enquiryUrl": "null"
         }
-        const response = await axios.post(process.env.ACTION_SEND_EMAIL_URL, requestBody);
+        const response = await axios.post(baseUrl, requestBody);
         if (response.data && response.data.result) {
             return { result: response.data.result };
         } else {
